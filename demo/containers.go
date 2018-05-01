@@ -2,8 +2,11 @@ package main
 
 import (
 	"fmt"
+	"io/ioutil"
 	"os"
 	"os/exec"
+	"path/filepath"
+	"strconv"
 	"syscall"
 )
 
@@ -42,7 +45,10 @@ func parent() {
 }
 
 func child() {
+	cg()
+
 	cmd := exec.Command(os.Args[2], os.Args[3:]...)
+
 	cmd.Stdin = os.Stdin
 	cmd.Stdout = os.Stdout
 	cmd.Stderr = os.Stderr
@@ -61,4 +67,15 @@ func must(err error) {
 	if err != nil {
 		panic(err)
 	}
+}
+
+func cg() {
+	cgroups := "/sys/fs/cgroup/"
+	pids := filepath.Join(cgroups, "pids")
+
+	must(os.Mkdir(filepath.Join(pids, "demo"), 755))
+	must(ioutil.WriteFile(filepath.Join(pids, "demo/pids.max"), []byte("20"), 0700))
+
+	must(ioutil.WriteFile(filepath.Join(pids, "demo/notify_on_release"), []byte("1"), 0700))
+	must(ioutil.WriteFile(filepath.Join(pids, "demo/cgroup.procs"), []byte(strconv.Itoa(os.Getpid())), 0700))
 }
