@@ -18,7 +18,7 @@ sudo apt-get install -y docker-ce
 
 curl -LO https://storage.googleapis.com/golang/go1.10.linux-amd64.tar.gz
 sudo tar -C /usr/local -xvzf go1.10.linux-amd64.tar.gz
-echo 'export PATH=$PATH:/usr/local/go/bin' >>/home/vagrant/.bashrc
+echo 'export PATH=$PATH:/usr/local/go/bin' | tee -a /home/vagrant/.bashrc
 echo "export GOROOT=/usr/local/go" | tee -a /root/.bashrc
 echo "export PATH=$PATH:/usr/local/go/bin" | tee -a /root/.bashrc
 mkdir -p /home/vagrant/containers/
