@@ -41,7 +41,7 @@ func child() {
 	cmd.Stderr = os.Stderr
 
 	must(syscall.Sethostname([]byte("container")))
-	must(syscall.Chroot("/home/vagrant/containers/fs/rootfs-ubuntu"))
+	must(syscall.Chroot("/home/vagrant/containers/fs/rootfs-alpine"))
 	must(syscall.Chdir("/"))
 
 	must(cmd.Run())

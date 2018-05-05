@@ -11,10 +11,10 @@ import (
 func main() {
 	switch os.Args[1] {
 	case "run":
-		fmt.Printf("ejecutando %v con pid %d\n", os.Args[2:], os.Getpid())
+		fmt.Printf("host ejecutando %v con pid %d\n", os.Args[2:], os.Getpid())
 		parent()
 	case "child":
-		fmt.Printf("ejecutando hijo con pid %d\n", os.Getpid())
+		fmt.Printf("guest ejecutando hijo con pid %d\n", os.Getpid())
 		child()
 	default:
 		panic("OMG!")

@@ -28,16 +28,7 @@ func parent() {
 	cmd.Stderr = os.Stderr
 
 	cmd.SysProcAttr = &syscall.SysProcAttr{
-		Cloneflags: syscall.CLONE_NEWUTS | syscall.CLONE_NEWPID | syscall.CLONE_NEWUSER,
-		///////////////////
-		Credential: &syscall.Credential{Uid: 0, Gid: 0},
-		UidMappings: []syscall.SysProcIDMap{
-			{ContainerID: 0, HostID: os.Getuid(), Size: 1},
-		},
-		GidMappings: []syscall.SysProcIDMap{
-			{ContainerID: 0, HostID: os.Getegid(), Size: 1},
-		},
-		////////////////////
+		Cloneflags: syscall.CLONE_NEWUTS | syscall.CLONE_NEWPID | syscall.CLONE_NEWNS,
 	}
 
 	must(cmd.Run())
@@ -50,7 +41,7 @@ func child() {
 	cmd.Stderr = os.Stderr
 
 	must(syscall.Sethostname([]byte("container")))
-	must(syscall.Chroot("/home/vagrant/containers/fs/rootfs-ubuntu"))
+	must(syscall.Chroot("/home/vagrant/containers/fs/rootfs-alpine"))
 	must(syscall.Chdir("/"))
 	must(syscall.Mount("proc", "proc", "proc", 0, ""))
 
