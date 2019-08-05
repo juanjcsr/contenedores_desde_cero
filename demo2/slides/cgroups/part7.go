@@ -83,10 +83,10 @@ func cg() {
 	cgroups := "/sys/fs/cgroup/"
 	pids := filepath.Join(cgroups, "pids")
 
-	must(os.Mkdir(filepath.Join(pids, "demo1"), 755))
-	must(ioutil.WriteFile(filepath.Join(pids, "demo1/pids.max"), []byte("20"), 0700))
+	must(os.MkdirAll(filepath.Join(pids, "demo3"), 755))
+	must(ioutil.WriteFile(filepath.Join(pids, "demo3/pids.max"), []byte("20"), 0700))
 
 	//asigna el pid y elimina el cgroup cuando el contenedor termina
-	must(ioutil.WriteFile(filepath.Join(pids, "demo1/notify_on_release"), []byte("1"), 0700))
-	must(ioutil.WriteFile(filepath.Join(pids, "demo1/cgroup.procs"), []byte(strconv.Itoa(os.Getpid())), 0700))
+	must(ioutil.WriteFile(filepath.Join(pids, "demo3/notify_on_release"), []byte("1"), 0700))
+	must(ioutil.WriteFile(filepath.Join(pids, "demo3/cgroup.procs"), []byte(strconv.Itoa(os.Getpid())), 0700))
 }
