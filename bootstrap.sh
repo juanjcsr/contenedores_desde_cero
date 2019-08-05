@@ -31,3 +31,5 @@ mkdir -p /home/vagrant/containers/fs/rootfs-ubuntu/
 
 tar -xzvf /vagrant/alpine-rootfs.tar.gz -C /home/vagrant/containers/fs/rootfs-alpine/
 tar -xzvf /vagrant/ubuntu-rootfs.tar.gz -C /home/vagrant/containers/fs/rootfs-ubuntu/
+
+sudo cp -f /home/vagrant/.bashrc /root/.bashrc
