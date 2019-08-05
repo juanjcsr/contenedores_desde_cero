@@ -8,10 +8,10 @@ import (
 )
 
 func main() {
-	// We expect "run" as the first argument
+	// run es el primer argumento
 	switch os.Args[1] {
 	case "run":
-		run()
+		parent()
 	default:
 		panic("mal argumento")
 	}
@@ -19,8 +19,9 @@ func main() {
 	fmt.Println("== Fin ==")
 }
 
-func run() {
-	// Arguments 2 onwards are the arbitrary command we're going to run
+func parent() {
+	// Los siguientes argumentos son los que vamos a
+	// ejecutar (con sus parámetros)
 	fmt.Printf("Ejecutando %v\n", os.Args[2:])
 
 	// Set up a struct that describes the command we want to run
