@@ -7,6 +7,7 @@ import (
 	"os/exec"
 )
 
+// go run main.go run <cmd> <args>
 func main() {
 	// run es el primer argumento
 	switch os.Args[1] {

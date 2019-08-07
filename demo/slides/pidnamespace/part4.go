@@ -2,15 +2,13 @@ package main
 
 import (
 	"fmt"
-	"io/ioutil"
 	"log"
 	"os"
 	"os/exec"
-	"path/filepath"
-	"strconv"
 	"syscall"
 )
 
+// go run main.go run <cmd> <args>
 func main() {
 	// Esperamos "run" como primer argumento
 	switch os.Args[1] {
@@ -40,10 +38,7 @@ func parent() {
 	cmd.Stderr = os.Stderr
 
 	cmd.SysProcAttr = &syscall.SysProcAttr{
-		Cloneflags: syscall.CLONE_NEWUTS |
-			syscall.CLONE_NEWPID |
-			syscall.CLONE_NEWNS,
-		Unshareflags: syscall.CLONE_NEWNS,
+		Cloneflags: syscall.CLONE_NEWUTS | syscall.CLONE_NEWPID,
 	}
 
 	// Aquí ejecutamos el comando:
@@ -52,8 +47,6 @@ func parent() {
 }
 
 func child() {
-
-	cg()
 	// Preparamos al hijo para ejecutar nuestro comando
 	cmd := exec.Command(os.Args[2], os.Args[3:]...)
 	cmd.Stdin = os.Stdin
@@ -62,13 +55,9 @@ func child() {
 
 	// syscall para el hostname
 	must(syscall.Sethostname([]byte("container")))
-	must(syscall.Chroot("/home/vagrant/containers/fs/rootfs-ubuntu"))
-	must(syscall.Chdir("/"))
-	must(syscall.Mount("proc", "proc", "proc", 0, ""))
+
 	// Aquí ejecutamos el comando:
 	must(cmd.Run())
-
-	must(syscall.Unmount("proc", 0))
 
 	fmt.Println("== Fin child ==")
 }
@@ -77,16 +66,4 @@ func must(err error) {
 	if err != nil {
 		log.Panicln(err)
 	}
-}
-
-func cg() {
-	cgroups := "/sys/fs/cgroup/"
-	pids := filepath.Join(cgroups, "pids")
-
-	must(os.MkdirAll(filepath.Join(pids, "demo1"), 755))
-	must(ioutil.WriteFile(filepath.Join(pids, "demo1/pids.max"), []byte("20"), 0700))
-
-	//asigna el pid y elimina el cgroup cuando el contenedor termina
-	must(ioutil.WriteFile(filepath.Join(pids, "demo1/notify_on_release"), []byte("1"), 0700))
-	must(ioutil.WriteFile(filepath.Join(pids, "demo1/cgroup.procs"), []byte(strconv.Itoa(os.Getpid())), 0700))
 }

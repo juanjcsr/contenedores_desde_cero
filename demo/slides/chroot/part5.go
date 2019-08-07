@@ -8,6 +8,7 @@ import (
 	"syscall"
 )
 
+// go run main.go run <cmd> <args>
 func main() {
 	// Esperamos "run" como primer argumento
 	switch os.Args[1] {
@@ -37,10 +38,7 @@ func parent() {
 	cmd.Stderr = os.Stderr
 
 	cmd.SysProcAttr = &syscall.SysProcAttr{
-		Cloneflags: syscall.CLONE_NEWUTS |
-			syscall.CLONE_NEWPID |
-			syscall.CLONE_NEWNS,
-		// Unshareflags: syscall.CLONE_NEWNS,
+		Cloneflags: syscall.CLONE_NEWUTS | syscall.CLONE_NEWPID,
 	}
 
 	// Aquí ejecutamos el comando:
@@ -59,11 +57,8 @@ func child() {
 	must(syscall.Sethostname([]byte("container")))
 	must(syscall.Chroot("/home/vagrant/containers/fs/rootfs-alpine"))
 	must(syscall.Chdir("/"))
-	must(syscall.Mount("proc", "proc", "proc", 0, ""))
 	// Aquí ejecutamos el comando:
 	must(cmd.Run())
-
-	must(syscall.Unmount("proc", 0))
 
 	fmt.Println("== Fin child ==")
 }

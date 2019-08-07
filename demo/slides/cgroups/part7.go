@@ -11,6 +11,7 @@ import (
 	"syscall"
 )
 
+// go run main.go run <cmd> <args>
 func main() {
 	// Esperamos "run" como primer argumento
 	switch os.Args[1] {
