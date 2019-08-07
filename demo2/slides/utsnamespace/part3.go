@@ -53,7 +53,7 @@ func child() {
 	cmd.Stderr = os.Stderr
 
 	// syscall para el hostname
-	must(syscall.Sethostname([]byte("container")))
+	// must(syscall.Sethostname([]byte("container")))
 
 	// Aquí ejecutamos el comando:
 	must(cmd.Run())
